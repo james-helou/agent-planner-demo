@@ -55,9 +55,48 @@ interface WorkflowRendererProps {
   onBuild?: () => void;
 }
 
+// Check if workflow has a specific demo template available
+function hasLiveDemoTemplate(workflow: Workflow): boolean {
+  const name = workflow.name.toLowerCase();
+  const description = workflow.description.toLowerCase();
+  const combined = `${name} ${description}`;
+  
+  // Corporate Actions
+  if (combined.includes('corporate action') || 
+      combined.includes('dividend') || 
+      combined.includes('proxy') ||
+      combined.includes('merger') ||
+      combined.includes('stock split') ||
+      combined.includes('rights issue')) {
+    return true;
+  }
+  
+  // KYC/AML
+  if (combined.includes('kyc') || 
+      combined.includes('know your customer') ||
+      combined.includes('aml') ||
+      combined.includes('anti-money') ||
+      combined.includes('customer verification') ||
+      combined.includes('identity verification')) {
+    return true;
+  }
+  
+  // Trade/Settlement
+  if (combined.includes('trade') || 
+      combined.includes('settlement') ||
+      combined.includes('clearing') ||
+      combined.includes('matching') ||
+      combined.includes('execution')) {
+    return true;
+  }
+  
+  return false;
+}
+
 export function WorkflowRenderer({ workflow, onBack, onBuild }: WorkflowRendererProps) {
   const [activeAgentIndex, setActiveAgentIndex] = useState(0);
   const activeAgent = workflow.agents[activeAgentIndex];
+  const showLiveDemo = hasLiveDemoTemplate(workflow);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-purple-50/30">
@@ -86,10 +125,12 @@ export function WorkflowRenderer({ workflow, onBack, onBuild }: WorkflowRenderer
                 </div>
               </div>
             </div>
-            <button onClick={onBuild} className="group flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/25 hover:shadow-xl transition-all duration-200 ripple">
-              <Zap className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              <span>Preview Live Demo</span>
-            </button>
+            {showLiveDemo && (
+              <button onClick={onBuild} className="group flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/25 hover:shadow-xl transition-all duration-200 ripple">
+                <Zap className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                <span>Preview Live Demo</span>
+              </button>
+            )}
           </div>
         </div>
       </div>
