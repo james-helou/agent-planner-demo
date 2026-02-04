@@ -29,10 +29,83 @@ const mockDocuments = [
 export function CorporateActionsTemplate({ workflow }: Props) {
   const [activeTab, setActiveTab] = useState<'announcements' | 'elections' | 'documents'>('announcements');
   const [selectedAnnouncement, setSelectedAnnouncement] = useState<typeof mockAnnouncements[0] | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   return (
     <div className="p-6">
-      {/* Key Metrics */}
+      {/* Explanation Banner */}
+      <div className="mb-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-xl">
+        <div className="flex items-start space-x-3">
+          <div className="p-2 bg-blue-100 rounded-lg">
+            <svg className="w-5 h-5 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/>
+            </svg>
+          </div>
+          <div>
+            <h3 className="text-sm font-semibold text-blue-900">This is a Live Preview</h3>
+            <p className="text-sm text-blue-700 mt-1">
+              You're viewing a simulated dashboard showing how your <strong>{workflow.agents.length}-agent workflow</strong> would 
+              operate in production. This demonstrates the UI and data flows that would be generated from your workflow configuration.
+              The data shown is sample data for demonstration purposes.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Add Manual Entry Modal */}
+      {showAddModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" onClick={() => setShowAddModal(false)}>
+          <div className="bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg mx-4" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-gray-900">Add Manual Entry</h2>
+              <button onClick={() => setShowAddModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
+                <svg className="w-5 h-5 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+              </button>
+            </div>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Event Type</label>
+                <select className="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                  <option>Dividend</option>
+                  <option>Stock Split</option>
+                  <option>Merger</option>
+                  <option>Rights Issue</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Security</label>
+                <input type="text" placeholder="e.g., AAPL" className="w-full px-3 py-2 border border-gray-300 rounded-lg"/>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Ex-Date</label>
+                  <input type="date" className="w-full px-3 py-2 border border-gray-300 rounded-lg"/>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Pay Date</label>
+                  <input type="date" className="w-full px-3 py-2 border border-gray-300 rounded-lg"/>
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Rate/Terms</label>
+                <input type="text" placeholder="e.g., $0.50/share" className="w-full px-3 py-2 border border-gray-300 rounded-lg"/>
+              </div>
+              <div className="pt-4 flex justify-end space-x-3">
+                <button onClick={() => setShowAddModal(false)} className="px-4 py-2 text-gray-700 border border-gray-300 rounded-lg hover:bg-gray-50">
+                  Cancel
+                </button>
+                <button onClick={() => { setShowAddModal(false); alert('Entry added! (Demo only - not persisted)'); }} className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                  Add Entry
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Key Metrics */}}
       <div className="grid grid-cols-5 gap-4 mb-6">
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4">
           <div className="flex items-center justify-between mb-2">
@@ -155,7 +228,7 @@ export function CorporateActionsTemplate({ workflow }: Props) {
                   <option>Rights Issue</option>
                 </select>
               </div>
-              <button className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
+              <button onClick={() => setShowAddModal(true)} className="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700">
                 + Add Manual Entry
               </button>
             </div>
