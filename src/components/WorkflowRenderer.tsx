@@ -125,22 +125,12 @@ export function WorkflowRenderer({ workflow, onBack, onBuild }: WorkflowRenderer
                 </div>
               </div>
             </div>
-            {showLiveDemo && (
-              <button onClick={onBuild} className="group flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 shadow-lg shadow-blue-500/25 hover:shadow-xl transition-all duration-200 ripple">
-                <Zap className="w-4 h-4 group-hover:scale-110 transition-transform" />
-                <span>Preview Live Demo</span>
-              </button>
-            )}
+
           </div>
         </div>
       </div>
 
-      {/* Original Request */}
-      <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-100">
-        <div className="max-w-7xl mx-auto px-6 py-3">
-          <p className="text-sm text-gray-700"><span className="font-medium text-blue-700">Your request:</span> "{workflow.originalPrompt}"</p>
-        </div>
-      </div>
+
 
       {/* Stats Bar */}
       <div className="bg-white/80 backdrop-blur-sm border-b border-gray-200">

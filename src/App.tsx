@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Workflow, WorkflowInput } from './types/workflow';
-import { generateWorkflow } from './services/workflowGenerator';
+import { Workflow } from './types/workflow';
+import { generateWorkflowWithAI } from './services/azureOpenAI';
 import { WorkflowRenderer } from './components/WorkflowRenderer';
 import { WorkflowInputView } from './components/WorkflowInputView';
 import { DynamicWorkflowDemo } from './components/DynamicWorkflowDemo';
@@ -14,13 +14,12 @@ function App() {
   const [workflow, setWorkflow] = useState<Workflow | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  const handleGenerate = async (input: WorkflowInput) => {
+  const handleGenerate = async (tasks: string) => {
     setIsLoading(true);
     setError(null);
     
     try {
-      await new Promise(resolve => setTimeout(resolve, 800));
-      const generatedWorkflow = await generateWorkflow(input);
+      const generatedWorkflow = await generateWorkflowWithAI(tasks);
       setWorkflow(generatedWorkflow);
       setMode('preview');
     } catch (err) {
@@ -63,26 +62,11 @@ function App() {
 
   // Input mode - show the workflow input form
   return (
-    <div>
-      <WorkflowInputView
-        onGenerate={handleGenerate}
-        isLoading={isLoading}
-      />
-      
-      {/* Error Toast */}
-      {error && (
-        <div className="fixed bottom-4 right-4 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50">
-          <div className="flex items-center space-x-3">
-            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <circle cx="12" cy="12" r="10" />
-              <path d="M15 9l-6 6M9 9l6 6" />
-            </svg>
-            <span>{error}</span>
-            <button onClick={() => setError(null)} className="text-white/80 hover:text-white">×</button>
-          </div>
-        </div>
-      )}
-    </div>
+    <WorkflowInputView
+      onGenerate={handleGenerate}
+      isLoading={isLoading}
+      error={error}
+    />
   );
 }
 
